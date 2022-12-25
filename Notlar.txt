@@ -1,0 +1,375 @@
+Kütüphaneleri ekle.
+
+Context dosyasý/Mycontext classý
+using Microsoft.EntityFrameworkCore;
+
+namespace IleriRepository.Models
+{
+    public class MyContext:DbContext
+    {
+    
+        public MyContext(DbContextOptions<MyContext> db ):base( db )
+        {
+
+        }
+    }
+}
+
+AppSetting.jason
+-------------------------------------------------------------------------------------------------------------
+  "ConnectionStrings": {
+    "Baglanti": "Server=DESKTOP-4GKM6HK\\SQLEXPRESS;Database=IleriCrep;Trusted_Connection=True;"
+  },
+
+  ------------------------------------------------------------------------------------------------------------
+ Program.cs
+builder.Services.AddDbContext<MyContext>(options =>
+       options.UseSqlServer(builder.Configuration.GetConnectionString("Baglanti"))
+
+ -------------------------------------------------------------------------------------------------------------
+ Data klasör/Personel class/BaseInt/BaseStr class ekledi
+ namespace IleriRepository.Data
+{
+    public class BaseInt
+    {
+
+        public int  Id { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime LastUpdatedDate { get; set; }
+    }
+}
+
+namespace IleriRepository.Data
+{
+    public class BaseStr
+    {
+        public string Id{ get; set; }
+        public DateTime  CreatedDate{ get; set; }
+        public DateTime LastUpdatedDate{ get; set; }
+    }
+}
+ -------------------------------------------------------------------------------------------------------------
+
+ Data klasörü Personel class ekledik BaseInt miras aldý 3 deðiþkeni
+ namespace IleriRepository.Data
+{
+    public class Personel:BaseInt
+    {
+        public string ?Name { get; set; }
+        public string ?SurName { get; set; }
+        public DateTime  DateofBirth { get; set; }
+        public int DepartmanId { get; set; }
+        public string ?GradeId { get; set; }
+        public char Gender { get; set; }
+        public string? Street { get; set; }
+        public string ?Avenue { get; set; }
+        private  string ?Phone { get; set; }
+        public int No { get; set; }
+        public int CuntryId { get; set; }
+        public string ?ImgUrl { get; set; }
+    }
+}
+ -------------------------------------------------------------------------------------------------------------
+ Data klasorü County classý
+ namespace IleriRepository.Data
+{
+    public class County:BaseInt
+    {
+        public string ?CountyName { get; set; }
+        public int CityId { get; set; }
+    }
+}
+ -------------------------------------------------------------------------------------------------------------
+ namespace IleriRepository.Data
+{
+    public class City:BaseInt
+    {
+        public string ?CityName { get; set; }
+    }
+}
+ -------------------------------------------------------------------------------------------------------------
+ namespace IleriRepository.Data
+{
+    public class Department:BaseInt
+    {
+        public string  DepartmentName{ get; set; }
+    }
+}
+ -------------------------------------------------------------------------------------------------------------
+namespace IleriRepository.Data
+{
+    public class Grade:BaseStr
+    {
+        public string ?GradeName { get; set; }
+    }
+}
+
+personel clas
+      [ForeignKey ("CountyId")]
+        public County ?County { get; set; }
+        County.cs
+        [ForeignKey("CityId")]
+        public City City { get; set; }
+          public ICollection <Personel> Personels { get; set; }
+
+{
+    public class City:BaseInt
+    {
+
+        public string ?CityName { get; set; }
+        //bir cityde birden fazla  ilçe olabilir
+        public ICollection<County> ?Counties{ get; set; }
+    }
+
+    personel.cls
+      public Grade ?Grade { get; set; }
+        public Department ?Department { get; set; }
+    ----------------------------------------------------
+        public DbSet<Personel> Personel { get; set; }
+        public DbSet<County> County { get; set; }
+        public DbSet<City> City { get; set; }
+        public DbSet<Grade> Grade { get; set; }
+        public DbSet<Department> Department  { get; set; }
+----------------------------------------------------
+        builder.Services.AddScoped<Personel>();
+builder.Services.AddScoped<Grade>();
+builder.Services.AddScoped<City>();
+builder.Services.AddScoped<Department>();
+builder.Services.AddScoped<County>();
+----------------------------------------------------
+    migration ekleme
+----------------------------------------------------
+Core klasör
+Baserepository interface
+using Microsoft.EntityFrameworkCore;
+
+namespace IleriRepository.Core
+{
+    public interface IBaseRepository<T> where T : class
+    {
+        public List<T> List();
+        public T Find (int id);
+        bool Update (T entity);
+        bool Delete (T entity);
+        bool Add(T entity);
+        public  DbSet<T> Set();
+        public void Save();
+    }
+}
+---------------------------
+Core/BaseRepository classý
+namespace IleriRepository.Core
+{
+    public class BaseRepository
+    {
+    }
+}
+  public class BaseRepository<T> : IBaseRepository<T> where T : class
+  //quick
+  //bunlar geldi
+
+    {
+        public bool Add(T entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Delete(T entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T Find(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<T> List()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Save()
+        {
+            throw new NotImplementedException();
+        }
+
+        public DbSet<T> Set()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Update(T entity)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    -------------------------------------------------------------------------------------------------
+     public class BaseRepository<T> : IBaseRepository<T> where T : class
+    {
+        MyContext _db;
+
+        public BaseRepository(MyContext db)
+        {
+            _db = db;
+        }
+        }
+Deðiþtirdik
+  public bool Add(T entity)
+        {
+
+            try
+            {
+                Set().Add(entity);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool Delete(int Id)
+        {
+            try
+            {
+                //2 yol: Set().Remove(Find(Id))
+                //1 yol:
+                var ent = Find(Id);
+                Set().Remove(ent);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+        }
+
+        public bool Delete(T entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T Find(int Id)
+        {
+            return Set().Find(Id);
+        }
+        public T Find(string  Id)
+        {
+            return Set().Find(Id);
+        }
+
+        public List<T> List()
+        {
+            return Set().ToList();   
+        }
+
+        public void Save()
+        {
+            _db.SaveChanges();
+
+        }
+
+        public DbSet<T> Set()
+        {
+            return _db.Set<T>();
+        }
+
+        public bool Update(T entity)
+        {
+            try {
+                Set().Update(entity);
+                return true;
+            }
+            catch {
+                return false;
+            }
+          
+        }
+        -----------------------------------------------------------------------------------------------
+        Repositories klasörü ekledik ve içine bir tane daha absract klasörü ekledik.
+        onun altýna concretes klasörü ekledik
+        -------------
+        Absract IpersonelRep ekledik
+            public interface IPersonelRep
+    {
+        //ek methodlar yazýcaz.
+        public int GetAge();
+        public string Fullname();
+        List<string> GetAddress();
+    }
+    ------------------------
+
+    dto klasörð ekledik-PersonelGradeList sýnýf ekledik
+    namespace IleriRepository.DTO
+{
+    public class PersonelGradeList
+    {
+        public int Id { get; set; }
+        public string Fullname { get; set; }
+        public string  Grade { get; set; }
+
+    }
+}
+
+namespace IleriRepository.DTO
+{
+    public class PersonelDepList
+    {
+        public int Id { get; set; }
+        public string ?Fullname { get; set; }
+        public string ?Deparment { get; set; }
+        public  string ?ImgUrl { get; set; }
+    }
+}
+using IleriRepository.DTO;
+
+namespace IleriRepository.Repositories.Abstract
+{
+    public interface IPersonelRep
+    {
+        //ek methodlar yazýcaz.
+        public int GetAge();
+        public string Fullname();
+        List<string> GetAddress();
+        List<PersonelGradeList> ListbyGrade();//grade göre liste
+        List<PersonelDepList> ListbyDepatment();//departmana göre liste
+
+    }
+}
+-----------
+Concrete PersonelRep classý açtý
+public class PersonelRep : BaseRepository<Personel>, IPersonelRep
+    {
+        public PersonelRep(MyContext db) : base(db)
+        {
+
+        }
+
+        public string Fullname()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<string> GetAddress()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetAge()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<PersonelDepList> ListbyDepatment()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<PersonelGradeList> ListbyGrade()
+        {
+            throw new NotImplementedException();
+        }
+    }

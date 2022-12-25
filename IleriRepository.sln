@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32825.248
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IleriRepository", "IleriRepository\IleriRepository.csproj", "{B2D4990C-0B0F-4858-850D-F1E8DF8394C5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{68A83995-5D98-474B-BE83-057146FD1F12}"
+	ProjectSection(SolutionItems) = preProject
+		Notlar.txt = Notlar.txt
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B2D4990C-0B0F-4858-850D-F1E8DF8394C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2D4990C-0B0F-4858-850D-F1E8DF8394C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2D4990C-0B0F-4858-850D-F1E8DF8394C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2D4990C-0B0F-4858-850D-F1E8DF8394C5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B20800AF-41B0-4754-A68A-1ACA6CCBBEC4}
+	EndGlobalSection
+EndGlobal

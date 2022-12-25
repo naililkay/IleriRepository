@@ -1,0 +1,48 @@
+﻿@model IleriRepository.Models.GradeModel
+
+@{
+    ViewData["Title"] = "Crud";
+}
+
+<h1>@Model.Head</h1>
+
+<h4>Grade</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Grade.GradeName" class="control-label"></label>
+                <input asp-for="Grade.GradeName" class="form-control" />
+                <span asp-validation-for="Grade.GradeName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Grade.Id" class="control-label"></label>
+                <input asp-for="Grade.Id" class="form-control" />
+                <span asp-validation-for="Grade.Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Grade.CreatedDate" class="control-label"></label>
+                <input asp-for="Grade.CreatedDate" class="form-control" />
+                <span asp-validation-for="Grade.CreatedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Grade.LastUpdatedDate" class="control-label"></label>
+                <input asp-for="Grade.LastUpdatedDate" class="form-control" />
+                <span asp-validation-for="Grade.LastUpdatedDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="@Model.Text" class="@Model.Cls" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

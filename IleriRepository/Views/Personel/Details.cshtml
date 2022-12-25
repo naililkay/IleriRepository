@@ -1,0 +1,32 @@
+﻿@model IleriRepository.Data.Personel
+
+
+<h1>Details</h1>
+
+<div>
+    <h4>Personel</h4>
+    <hr />
+    <div class="container-fluid">
+        <div>
+    <div class="col-md-7">
+        <img style="text-align:center" src="@Model.ImgUrl" width="250" height="250" />
+    </div>
+            <div class="col-md-7">
+                <p>@Model.FullName() (@Model.GetAge())</p>
+            </div>
+            5
+        </div>
+        <div class="col-md-7">
+            <adress>
+                @foreach (var item in Model.GetAddress())
+                {
+                    <p>@item</p> <br />
+                }
+            </adress>
+        </div>
+    </div>
+    </div>
+<div>
+    @Html.ActionLink("Edit", "Edit", new {id = Model.Id }) 
+    <a asp-action="Index">Back to List</a>
+</div>
